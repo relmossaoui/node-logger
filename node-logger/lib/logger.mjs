@@ -36,24 +36,28 @@ function generateLoggingPath() {
     }
 
     // if it is absolute, then use it as absolute
-    try {
+    try { 
         fs.accessSync(`${LOGGIN_PATH}`)
     } catch(err) {
-        fs.mkdir(`${LOGGIN_PATH}`, {
-            recursive : true
-        }, (err) => {
-            console.log(err)
-        } )
+        try {
+            fs.mkdirSync(`${LOGGIN_PATH}`, {
+                recursive : true
+            })
+        } catch (err1) {
+            console.log(err1)
+        }
+        console.log(err)
     }
 
     return `${LOGGIN_PATH}/log2.log`
 }
 
-console.log(generateLoggingPath())
 
 // create a writable stream stream.Writable
 // fs.WriteStream => by specifying logginPath as underlying resource where stream be flushed. 
-let loggingWriteStream = fs.createWriteStream(generateLoggingPath());
+let loggingWriteStream = fs.createWriteStream(generateLoggingPath(), (err) => {
+    console.log(err)
+});
 
 // Logger extends Console to customize 
 class Logger extends Console{
