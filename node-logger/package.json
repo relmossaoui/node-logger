@@ -16,7 +16,6 @@
   ],
   "author": "EL MOSSAOUI Redouan",
   "license": "ISC",
-
   "dependencies": {
     "dotenv": "^8.1.0"
   }
