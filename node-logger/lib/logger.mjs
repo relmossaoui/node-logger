@@ -2,12 +2,13 @@ import { Console } from 'console';
 import path from 'path';
 import fs from 'fs';
 
+import configs from '../config.mjs';
 
-import { 
+const { 
     SEPARATED_ERROR, 
     LOGGIN_PATH,
     ROOT_PATH
-} from '../config.mjs';
+} = configs;
 
 // if ROOT_PATH not specified in config, then we take a temp folder as root folder
 /**
