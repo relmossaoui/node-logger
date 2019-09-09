@@ -1,5 +1,5 @@
 {
     "scripts": {
-        "test" : "nodemon --experimental-modules test.mjs"
+        "test": "nodemon --experimental-modules test.mjs"
     }
 }

@@ -2,11 +2,12 @@ import { Console } from 'console';
 import path from 'path';
 import fs from 'fs';
 
+
 import { 
     SEPARATED_ERROR, 
     LOGGIN_PATH,
     ROOT_PATH
-} from './config.mjs';
+} from '../config.mjs';
 
 // if ROOT_PATH not specified in config, then we take a temp folder as root folder
 /**
@@ -24,7 +25,9 @@ function generateLoggingPath() {
             fs.accessSync(`${rootPath}/${LOGGIN_PATH}`)
         } catch(err) {
             // if not the directory will be created
-            fs.mkdir(`${rootPath}/${LOGGIN_PATH}`, (err) => {
+            fs.mkdir(`${rootPath}/${LOGGIN_PATH}`, {
+                recursive : true
+            }, (err) => {
                 console.log(err)
             } )
         }
@@ -36,13 +39,17 @@ function generateLoggingPath() {
     try {
         fs.accessSync(`${LOGGIN_PATH}`)
     } catch(err) {
-        fs.mkdir(`${LOGGIN_PATH}`, (err) => {
+        fs.mkdir(`${LOGGIN_PATH}`, {
+            recursive : true
+        }, (err) => {
             console.log(err)
         } )
     }
 
-    return `${LOGGIN_PATH}/log1.log`
+    return `${LOGGIN_PATH}/log2.log`
 }
+
+console.log(generateLoggingPath())
 
 // create a writable stream stream.Writable
 // fs.WriteStream => by specifying logginPath as underlying resource where stream be flushed. 

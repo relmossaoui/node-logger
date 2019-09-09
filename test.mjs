@@ -1,4 +1,4 @@
-import logger from './lib/logger.mjs'
+import logger from './node-logger/lib/logger.mjs'
 
 logger.info('first message 1')
 
