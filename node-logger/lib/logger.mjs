@@ -1,11 +1,14 @@
 import { Console } from 'console';
 import path from 'path';
 import fs from 'fs';
+import moment from 'moment'
 
 import configs from '../config.mjs';
 
 const { 
-    SEPARATED_ERROR, 
+    LOGGING_PREFIX,
+    LOGGIN_FILE_NAME,
+    LOGGING_MODE,
     LOGGIN_PATH,
     ROOT_PATH
 } = configs;
@@ -33,7 +36,7 @@ function generateLoggingPath() {
             } )
         }
         
-        return `${rootPath}/${LOGGIN_PATH}/log1.log`
+        return `${rootPath}/${LOGGIN_PATH}/`
     }
 
     // if it is absolute, then use it as absolute
@@ -50,13 +53,20 @@ function generateLoggingPath() {
         console.log(err)
     }
 
-    return `${LOGGIN_PATH}/log2.log`
+    return `${LOGGIN_PATH}/`
 }
 
+let fileName = '';
+
+if ('daily' === LOGGING_MODE) {
+    fileName = `${LOGGING_PREFIX}-${moment().year()}-${moment().day()}-${moment().date()}`
+} else {
+    fileName = LOGGIN_FILE_NAME;
+}
 
 // create a writable stream stream.Writable
 // fs.WriteStream => by specifying logginPath as underlying resource where stream be flushed. 
-let loggingWriteStream = fs.createWriteStream(generateLoggingPath(), (err) => {
+let loggingWriteStream = fs.createWriteStream(`${generateLoggingPath()}${fileName}.log`, (err) => {
     console.log(err)
 });
 
