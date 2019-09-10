@@ -1,0 +1,8 @@
+{
+    "logViewer.watch": [
+        {
+        "title": "test logger",
+        "pattern": "C:\\Users\\relmossaoui\\Desktop\\projects\\node-logging\\storage\\*.log"
+        }
+    ]
+}

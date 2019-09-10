@@ -66,7 +66,8 @@ if ('daily' === LOGGING_MODE) {
 
 // create a writable stream stream.Writable
 // fs.WriteStream => by specifying logginPath as underlying resource where stream be flushed. 
-let loggingWriteStream = fs.createWriteStream(`${generateLoggingPath()}${fileName}.log`, (err) => {
+let loggingWriteStream = fs.createWriteStream(`${generateLoggingPath()}${fileName}.log`,
+{ flags: 'a'}, (err) => {
     console.log(err)
 });
 
