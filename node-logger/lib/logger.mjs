@@ -21,54 +21,39 @@ const {
  */
 let rootPath = ROOT_PATH ? ROOT_PATH : os.tmpdir();
 
-function generateLoggingPath() {
+function createPath(path) 
+{
+    try {
+        // check if the path is accessible
+        fs.accessSync(path)
+    } catch(err) {
+        // if not the directory will be created
+        fs.mkdir(path, { recursive : true }, (err) => {
+            console.log(err)
+        } )
+    }
+    return path;
+}
+function generateLoggerPath() {
     // if logging path is not absolute, then use it as reltive path to root path.
     if (! path.isAbsolute(LOGGIN_PATH)) {
-        try {
-            // check if the path is accessible
-            fs.accessSync(`${rootPath}/${LOGGIN_PATH}`)
-        } catch(err) {
-            // if not the directory will be created
-            fs.mkdir(`${rootPath}/${LOGGIN_PATH}`, {
-                recursive : true
-            }, (err) => {
-                console.log(err)
-            } )
-        }
-        
-        return `${rootPath}/${LOGGIN_PATH}/`
+        return createPath(`${rootPath}/${LOGGIN_PATH}`)
     }
-    // if it is absolute, then use it as absolute
-    try { 
-        fs.accessSync(`${LOGGIN_PATH}`)
-    } catch(err) {
-        try {
-            fs.mkdirSync(`${LOGGIN_PATH}`, {
-                recursive : true
-            })
-        } catch (err1) {
-            console.log(err1)
-        }
-        console.log(err)
-    }
-
-    return `${LOGGIN_PATH}/`
+    return createPath(`${LOGGIN_PATH}`)
 }
 
-let fileName = '';
-
-if ('daily' === LOGGING_MODE) {
-    fileName = `${LOGGING_PREFIX}-${moment().year()}-${moment().day()}-${moment().date()}`
-} else {
-    fileName = LOGGIN_FILE_NAME;
+function createLoggerFileName() {
+    return 'daily' !== LOGGING_MODE ? LOGGIN_FILE_NAME : 
+        `${LOGGING_PREFIX}-${moment().year()}-${moment().day()}-${moment().date()}`;
 }
 
 // create a writable stream stream.Writable
 // fs.WriteStream => by specifying logginPath as underlying resource where stream be flushed. 
-let loggingWriteStream = fs.createWriteStream(`${generateLoggingPath()}${fileName}.log`,
-{ flags: 'a'}, (err) => {
-    console.log(err)
-});
+let loggingWriteStream = fs.createWriteStream(
+    `${generateLoggerPath()}/${createLoggerFileName()}.log`,
+    { flags: 'a'}, 
+    (err) => { console.log(err) }
+);
 
 // Logger extends Console to customize 
 class Logger extends Console{
