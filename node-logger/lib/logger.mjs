@@ -10,8 +10,8 @@ const {
     LOGGIN_FILE_NAME,
     LOGGING_MODE,
     LOGGIN_PATH,
-    ROOT_PATH
-} = configs;
+    ROOT_PATH 
+    } = configs;
 
 // if ROOT_PATH not specified in config, then we take a temp folder as root folder
 /**
@@ -80,24 +80,24 @@ class Logger extends Console{
      * @returns {String}: formatted log line
      * @memberof Logger
      */
-    formatLogLine(level, message) {
+    formatLogLine(level, message, params) {
         const __filename = path.basename(this.callsites()[1].getFileName());
         const  __linenumber = this.callsites()[1].getLineNumber();
     
-        return `${moment().format()} | ${process.pid}  | ${level}  | ${__filename}:${__linenumber} | ${message}`
+        return `${moment().format()} | ${process.pid}  | ${level}  | ${__filename}:${__linenumber} | ${message}: ${JSON.stringify(params)}`
     }
 
     // Console methods redfinition
-    info(info) { 
-        super.info(this.formatLogLine('INFO', info));
+    info(info, params = {}) { 
+        super.info(this.formatLogLine('INFO', info, params));
     }
 
-    error(error) {
-        super.error(this.formatLogLine('ERROR', error));
+    error(error, params = {}) {
+        super.error(this.formatLogLine('ERROR', error, params));
     }
 
-    warn(warn) {
-        super.error(this.formatLogLine('WARN', warn));
+    warn(warn, params = {}) {
+        super.error(this.formatLogLine('WARN', warn, params));
     }
 }
 

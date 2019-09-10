@@ -10,7 +10,7 @@ fs.access('.fddg', (err) => {
 let i = 0;
 let timerId = setInterval(() => {
     
-    logger.info(` logging ${i} `)
+    logger.info(` logging ${i} `, {id: 1, user: 'redouan'})
     logger.error(` logging ${i} `)
     logger.warn(` logging ${i} `)
 
