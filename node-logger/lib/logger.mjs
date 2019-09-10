@@ -1,7 +1,7 @@
 import { Console } from 'console';
 import path from 'path';
 import fs from 'fs';
-import moment from 'moment'
+import moment from 'moment';
 
 import configs from '../config.mjs';
 
@@ -38,7 +38,6 @@ function generateLoggingPath() {
         
         return `${rootPath}/${LOGGIN_PATH}/`
     }
-
     // if it is absolute, then use it as absolute
     try { 
         fs.accessSync(`${LOGGIN_PATH}`)
@@ -77,17 +76,43 @@ class Logger extends Console{
         super(loggingWriteStream)
     }
 
+    // return V8 error stack trace.
+    callsites() {
+        const _prepareStackTrace = Error.prepareStackTrace;
+        Error.prepareStackTrace = (_, stack) => stack;
+        const stack = new Error().stack.slice(2);
+        Error.prepareStackTrace = _prepareStackTrace;
+        return stack;
+    };
+
+    /**
+     * format log line as:
+     * 
+     * Date-Time | processID | logLevel | fileName:lineNumber | message
+     *
+     * @param {String} level
+     * @param {Strin} message
+     * @returns {String}: formatted log line
+     * @memberof Logger
+     */
+    formatLogLine(level, message) {
+        const __filename = path.basename(this.callsites()[1].getFileName());
+        const  __linenumber = this.callsites()[1].getLineNumber();
+    
+        return `${moment().format()} | ${process.pid}  | ${level}  | ${__filename}:${__linenumber} | ${message}`
+    }
+
     // Console methods redfinition
-    info(info) {
-        super.info(`info: ${info}`);
+    info(info) { 
+        super.info(this.formatLogLine('INFO', info));
     }
 
     error(error) {
-        super.error(`error: ${error}`);
+        super.error(this.formatLogLine('ERROR', error));
     }
 
     warn(warn) {
-        super.error(`warning: ${warn}`);
+        super.error(this.formatLogLine('WARN', warn));
     }
 }
 
